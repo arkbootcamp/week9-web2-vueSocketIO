@@ -10,7 +10,14 @@
     <label for="exampleInputPassword1">Password</label>
     <input type="password" v-model="password" class="form-control" id="exampleInputPassword1">
   </div>
-
+  <div class="form-group">
+    <label for="room">Room</label>
+    <select name="room" class="form-control" v-model="room">
+      <option value="arka1">Arka1</option>
+      <option value="arka2">Arka2</option>
+      <option value="arka3">Arka3</option>
+    </select>
+  </div>
   <button type="submit" class="btn btn-primary" @click="handleSubmit">Submit</button>
   </form>
   </div>
@@ -22,13 +29,21 @@ export default {
   name: 'Login',
   data: () => ({
     username: '',
-    password: ''
+    password: '',
+    room: ''
   }),
   methods: {
     handleSubmit () {
       const useriId = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10)
 
-      this.$router.push({ name: 'Chat', params: { userId: useriId, username: this.username } })
+      this.$router.push({
+        name: 'Chat',
+        params: {
+          userId: useriId,
+          username: this.username,
+          room: this.room
+        }
+      })
     }
   }
 }

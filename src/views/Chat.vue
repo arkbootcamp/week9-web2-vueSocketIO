@@ -10,7 +10,6 @@
                 <div class="box-chat">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item" v-for="(message, index) in messages" :key="index">{{message}}</li>
-
                     </ul>
                     <inputMessage @send-message="handleSendMessage"/>
                 </div>
@@ -33,7 +32,8 @@ export default {
     socket: io('http://localhost:4000'),
     userId: null,
     username: '',
-    messages: []
+    messages: [],
+    room: ''
   }),
   mounted () {
     if (!this.$route.params.userId) {
@@ -41,7 +41,8 @@ export default {
     }
     this.userId = this.$route.params.userId
     this.username = this.$route.params.username
-    this.socket.emit('welcomeMessage', { id: this.userId, username: this.username })
+    this.room = this.$route.params.room
+    this.socket.emit('welcomeMessage', { id: this.userId, username: this.username, room: this.room })
     this.socket.on('message', message => {
       console.log(message)
       this.messages.push(message)
@@ -52,7 +53,13 @@ export default {
   },
   methods: {
     handleSendMessage (value) {
-      this.socket.emit('sendMessage', value)
+      this.socket.emit('sendMessage', {
+        message: value,
+        userId: this.userId,
+        room: this.room
+      }, (error) => {
+        alert(error)
+      })
     }
   }
 }
